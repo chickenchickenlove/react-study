@@ -7,6 +7,13 @@ import UseCssStyleExample from "./component/UseCssStyleExample";
 import Footer from "./component/Footer";
 import Header from "./component/Header";
 import './App.css';
+import UseStateBody from "./component/UseStateBody";
+import UseStateInputTag from "./component/UseStateInputTag";
+import MultipleUseStateBody from "./component/MultipleUseStateBody";
+import MultipleUseStateBody2 from "./component/MultipleUseStateBody2";
+import PropagationStateChild from "./component/PropagationStateChild";
+import UseRefExample from "./component/UseRefExample";
+import UseRefExample2 from "./component/UseRefExample2";
 
 
 function App() {
@@ -33,9 +40,16 @@ function App() {
                 {/*    ChildComponent를 넘김.*/}
                 <CustomChildComponent/>
             </Body>
-            <ConditionalBody/>
-            <InlineStyleExample/>
-            <UseCssStyleExample/>
+            <ConditionalBody />
+            <InlineStyleExample />
+            <UseCssStyleExample />
+            <UseStateBody />
+            <UseStateInputTag />
+            <MultipleUseStateBody />
+            <MultipleUseStateBody2 />
+            <PropagationStateChild />
+            <UseRefExample />
+            <UseRefExample2 />
             <EventTestBody />
             <Footer/>
         </div>
