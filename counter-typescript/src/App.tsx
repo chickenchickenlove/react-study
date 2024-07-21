@@ -8,8 +8,7 @@ import {ButtonEventContext} from "./util";
 function App() {
     const [count, setCount] = useState<number> (0);
     const onClickButton = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
-        const target = e.target as HTMLButtonElement;
-        const num = parseInt(target.value);
+        const num = parseInt(e.currentTarget.value);
         setCount((prevState) => prevState + num);
     }, []);
 

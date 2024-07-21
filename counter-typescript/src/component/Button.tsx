@@ -1,6 +1,6 @@
 import "./Button.css";
 import React, {useContext} from "react";
-import {ButtonEventHandlers, ButtonEventContext} from "../util";
+import {ButtonEventContext} from "../util";
 
 type ButtonProps = {
     num: number
@@ -10,11 +10,7 @@ function Button ({
                      num
 }: ButtonProps) {
 
-    const ctx = useContext(ButtonEventContext);
-    if (!ctx) {
-        throw new Error("There is no context at all.");
-    }
-    const {onClickButton} = ctx as ButtonEventHandlers;
+    const {onClickButton} = useContext(ButtonEventContext);
     return (
         <button
             className="Button"

@@ -25,3 +25,4 @@ yarn-error.log*
 # IDE
 ./node_modules
 ./.idea
+.idea
