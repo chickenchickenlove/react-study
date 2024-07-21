@@ -2,6 +2,7 @@ import "./DiaryList.css"
 import Button from "./Button";
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
+import DiaryItem from "./DiaryItem";
 
 const sortOptionList = [
     { value: "latest", name: "최신순"},
@@ -37,6 +38,7 @@ function DiaryList({ data }) {
         setSortedData(copyList);
     }, [data, sortType]);
 
+    console.log("sortedData :", sortedData)
 
     return (
         <div className="DiaryList">
@@ -59,6 +61,11 @@ function DiaryList({ data }) {
                         onClick={onClickNew}
                     />
                 </div>
+            </div>
+            <div className="list_wrapper">
+                {sortedData.map((it) => {
+                    return <DiaryItem key={it.id} {...it} />
+                })}
             </div>
         </div>);
 }

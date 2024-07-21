@@ -1,3 +1,4 @@
+import React from "react";
 import "./EmotionItem.css"
 
 
@@ -18,4 +19,4 @@ function EmotionItem({ id, img, name, onClick, isSelected }) {
     );
 }
 
-export default EmotionItem;
+export default React.memo(EmotionItem);

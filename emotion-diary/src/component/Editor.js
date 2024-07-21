@@ -1,11 +1,11 @@
 import "./Editor.css";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import { emotionList, getFormattedDate } from "../utils";
 import Button from "./Button";
 import { useNavigate } from "react-router-dom";
 import EmotionItem from "./EmotionItem";
 
-// initData : 기존에 작성한 일기를 페이지에 보여줄 목점임.
+// initData : 기존에 작성한 일기를 페이지에 보여줄 목적임.
 // onSubmit : 작성 완료 버튼을 눌렀을 때.
 function Editor({ initData, onSubmit }) {
 
@@ -33,16 +33,21 @@ function Editor({ initData, onSubmit }) {
         )
     };
 
-    const handleSubmit = () => {
-        onSubmit(state);
-    }
+    // 최적화. 매번 State를 캡쳐해서 함수를 만들고 있으니 문제가 된다.
+    // const handleChangeEmotion = (emotionId) => {
+    //     setState({
+    //         ...state,
+    //         emotionId ,
+    //         })
+    // };
 
-    const handleChangeEmotion = (emotionId) => {
-        setState({
-            ...state,
-            emotionId ,
-            })
-    };
+    const handleChangeEmotion = useCallback((emotionId) => {
+        // 함수형 업데이트를 이용해 State를 캡쳐하지 않고 보낸다.
+        setState((prevState) => ({
+            ...prevState,
+            emotionId
+        }))
+    }, []);
 
     // react-router-dom이 제공함.
     // useNaviagate 사용시 클라이언트 사이드 렌더링 방식으로 페이지를 이동하는 함수 생성.
@@ -51,6 +56,11 @@ function Editor({ initData, onSubmit }) {
     const navigate = useNavigate();
     const handleOnGoBack = () => {
         navigate(-1);
+    }
+
+    const handleSubmit = () => {
+        onSubmit(state);
+        navigate("/")
     }
 
     useEffect(() => {

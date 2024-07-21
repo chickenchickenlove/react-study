@@ -43,14 +43,15 @@ function reducer(state, action) {
             return [action.data, ...state]
         }
         case "UPDATE": {
-            state.map((it) => {
+            return state.map((it) => {
                 return String(it.id) === String(action.data.id) ?
                     {...action.data} :
                     it;
             });
         }
         case "DELETE": {
-            return state.filter((it) => String(it.id) === String(action.targetId));
+            console.log("dispatch delete: ", action, )
+            return state.filter((it) => String(it.id) !== String(action.targetId));
         }
         default: {
             return state;
@@ -63,7 +64,7 @@ function reducer(state, action) {
 function App() {
 
     const [data, dispatch] = useReducer(reducer, []);
-    const idRef = useRef(0);
+    const idRef = useRef(4);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
 
     useEffect(() => {
@@ -74,7 +75,7 @@ function App() {
         setIsDataLoaded(true);
     }, []);
 
-    const onCreate = (date, content, emotionId) => {
+    const onCreate = ({date, content, emotionId}) => {
         dispatch({
             type: "CREATE",
             data: {
@@ -100,6 +101,7 @@ function App() {
     };
 
     const onDelete = (targetId) => {
+        console.log(targetId)
         dispatch({
             type: "DELETE",
             targetId
