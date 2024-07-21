@@ -1,0 +1,10 @@
+.ButtonList {
+    background-color: aquamarine;
+    width: 100%;
+    padding: 10px;
+}
+
+.ButtonList .button_container {
+    display: flex;
+}
+

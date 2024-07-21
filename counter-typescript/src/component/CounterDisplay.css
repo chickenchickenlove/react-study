@@ -1,0 +1,17 @@
+.CounterDisplay {
+    background-color: aquamarine;
+
+    padding-right: 10px;
+    padding-left: 10px ;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    width: 100%;
+}
+
+.CounterDisplay h4 {
+    font-size: 26px;
+}
+
+.CounterDisplay .count_description {
+    font-size: 22px;
+}
