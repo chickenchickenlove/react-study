@@ -1,17 +1,10 @@
 import "./Header.css"
-import React, {useContext, useState} from "react";
-import {DispatcherContext, TodoStateContext} from "../ContextUtil";
-
-type MyType = {
-    index: number
-    setIndex: any
-}
+import React, {useContext, useMemo, useState} from "react";
 
 function Header() {
-    console.log("Header")
-    const {onUpdate} = useContext(DispatcherContext);
-    const [content, setContent] = useState("");
-    const today = new Date();
+    const today = useMemo(() => {
+        return new Date();
+    }, []);
     return (
         <div className="Header">
             <h3>오늘은 📅</h3>

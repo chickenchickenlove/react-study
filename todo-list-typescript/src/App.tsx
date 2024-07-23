@@ -5,28 +5,22 @@ import TodoEditor from "./component/TodoEditor";
 import TodoList from "./component/TodoList";
 import {
     TodoStateContext,
-    TodoListType,
     TodoItemType,
     ActionType,
     DispatcherContext,
-    todoStateReducer
+    todoStateReducer, DispatcherType
 } from "./ContextUtil";
-import ReactDOM from "react-dom/client";
-
 
 function App() {
     const [todo, dispatch] = useReducer(todoStateReducer, []);
-    const [index, setIndex] = useState(4);
-
-    const setIndexMemo = useCallback(() => {
-        setIndex(previous => previous + 1);
-    }, []);
+    const idRef = useRef(4);
 
     const onCreate = useCallback((todoItem: TodoItemType): void => {
         const action: ActionType = {
             type: "CREATE",
-            data: todoItem
+            data: {...todoItem, id: idRef.current}
         };
+        idRef.current += 1;
         dispatch(action);
     }, []);
 
@@ -39,6 +33,7 @@ function App() {
         dispatch(action);
     }, []);
 
+
     const onUpdate = useCallback((todoItem: TodoItemType): void => {
         const action: ActionType = {
             type: "UPDATE",
@@ -47,17 +42,18 @@ function App() {
         dispatch(action);
     }, []);
 
+    // onCreate, onDelete, onUpdate 콜백 자체는 useCallback()을 써서 새롭게 생성되지 않음.
+    // 그러나 이걸 담은 Ojbect 객체는 매번 생성되기 때문에 DispatcherContext.Provider의 컨텍스트의 Props가 매번 바뀜.
+    const memorizedDispatchers: DispatcherType = useMemo(() => {
+        return {onCreate, onDelete, onUpdate}}, []);
     return (
         <div className="App">
-            {/*<Header setIndex={setIndex} onUpdate={onUpdate}/>*/}
+            <Header />
             <TodoStateContext.Provider value={{todo}}>
-                <MyCtx.Provider value={{index, setIndexMemo}}>
-                    <DispatcherContext.Provider value={{onCreate, onDelete, onUpdate}}>
-                        <Header />
-                        <TodoEditor/>
-                        <TodoList />
-                    </DispatcherContext.Provider>
-                </MyCtx.Provider>
+                <DispatcherContext.Provider value={memorizedDispatchers}>
+                    <TodoEditor/>
+                    <TodoList />
+                </DispatcherContext.Provider>
             </TodoStateContext.Provider>
         </div>
     );
