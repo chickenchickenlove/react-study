@@ -1,10 +1,11 @@
 import "./Header.css";
+import TodoList from "./TodoList";
+import {TodoItemType} from "../DataModel";
+
+
 
 
 function Header() {
-
-    new Date()
-
     return (
         <div className="Header">
             <h3>오늘은 📅 </h3>
