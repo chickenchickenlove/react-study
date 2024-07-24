@@ -1,6 +1,6 @@
 import "./TodoEditor.css"
 import {TodoItemType} from "../DataModel";
-import React, {useRef, useState} from "react";
+import React, {useState} from "react";
 import TodoItem from "./TodoItem";
 
 type TodoEditorInputType = {
@@ -10,12 +10,11 @@ type TodoEditorInputType = {
 function TodoEditor({ setTodoItems }: TodoEditorInputType) {
 
     const [contents, setContents] = useState('');
-    const myRef = useRef<string>('');
     const onUpdateContents = (e: React.ChangeEvent<HTMLInputElement>) => {
         setContents(e.currentTarget.value);
     }
 
-    const onButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const onButtonClick = (_e: React.MouseEvent<HTMLButtonElement>) => {
         const newTodoItem: TodoItemType = {
             id: 100,
             title: contents,
@@ -23,7 +22,8 @@ function TodoEditor({ setTodoItems }: TodoEditorInputType) {
             is_done: false
         };
 
-        setTodoItems((prevState: TodoItemType[]) => {
+        // 함수 리턴 타입까지 선언.
+        setTodoItems((prevState: TodoItemType[]): TodoItemType[] => {
             return [
                 newTodoItem,
                 ...prevState,
@@ -38,6 +38,9 @@ function TodoEditor({ setTodoItems }: TodoEditorInputType) {
             <h3> 새로운 Todo 작성하기 ✏️</h3>
             <div className="editor_wrapper">
                 <input
+                    // Value와 EventHandler는 같이 선언되어야 한다.
+                    // input 요소에서 value 속성을 제어할 때는 반드시 onChange 이벤트 핸들러를 함께 지정해야 함.
+                    // 그렇지 않으면 입력 필드가 읽기 전용이 되어 사용자가 값을 변경할 수 없게 됩니다.
                     value={contents}
                     onChange={onUpdateContents}
                     placeholder="새로운 Todo..."
