@@ -1,26 +1,31 @@
 import "./TodoEditor.css"
 import {TodoItemType} from "../DataModel";
-import React, {useState} from "react";
+import React, {Dispatch, SetStateAction, useState} from "react";
 import TodoItem from "./TodoItem";
 
 type TodoEditorInputType = {
-    setTodoItems: React.Dispatch<React.SetStateAction<TodoItemType[]>>;
+    idKey: number,
+    setIdKey: Dispatch<SetStateAction<number>>,
+    setTodoItems: Dispatch<SetStateAction<TodoItemType[]>>
 };
 
-function TodoEditor({ setTodoItems }: TodoEditorInputType) {
+function TodoEditor({ setTodoItems, idKey, setIdKey }: TodoEditorInputType) {
 
     const [contents, setContents] = useState('');
+
     const onUpdateContents = (e: React.ChangeEvent<HTMLInputElement>) => {
         setContents(e.currentTarget.value);
     }
 
     const onButtonClick = (_e: React.MouseEvent<HTMLButtonElement>) => {
         const newTodoItem: TodoItemType = {
-            id: 100,
+            id: idKey,
             title: contents,
             date: new Date().getTime(),
             is_done: false
         };
+
+        setIdKey((prevState) => prevState + 1);
 
         // 함수 리턴 타입까지 선언.
         setTodoItems((prevState: TodoItemType[]): TodoItemType[] => {
