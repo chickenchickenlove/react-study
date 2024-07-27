@@ -1,42 +1,32 @@
 import "./TodoEditor.css"
 import {TodoItemType} from "../DataModel";
-import React, {Dispatch, SetStateAction, useState} from "react";
-import TodoItem from "./TodoItem";
+import React, {useCallback, useContext, useState} from "react";
+import {DispatchContext} from "../ContextUtils";
 
 type TodoEditorInputType = {
-    idKey: number,
-    setIdKey: Dispatch<SetStateAction<number>>,
-    setTodoItems: Dispatch<SetStateAction<TodoItemType[]>>
+    idKey: React.MutableRefObject<number>,
 };
 
-function TodoEditor({ setTodoItems, idKey, setIdKey }: TodoEditorInputType) {
-
+function TodoEditor({ idKey }: TodoEditorInputType) {
     const [contents, setContents] = useState('');
+    const {onCreateTodoItem} = useContext(DispatchContext);
+    const onUpdateContents = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
+        setContents((_prevState) => e.target.value);
+    }, []);
 
-    const onUpdateContents = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setContents(e.currentTarget.value);
-    }
-
-    const onButtonClick = (_e: React.MouseEvent<HTMLButtonElement>) => {
+    const onButtonClick = useCallback((_e: React.MouseEvent<HTMLButtonElement>): void => {
         const newTodoItem: TodoItemType = {
-            id: idKey,
+            id: idKey.current,
             title: contents,
             date: new Date().getTime(),
             is_done: false
         };
 
-        setIdKey((prevState) => prevState + 1);
+        idKey.current += 1
 
-        // 함수 리턴 타입까지 선언.
-        setTodoItems((prevState: TodoItemType[]): TodoItemType[] => {
-            return [
-                newTodoItem,
-                ...prevState,
-            ];
-        });
-
-        setContents((prevState) => '');
-    };
+        onCreateTodoItem(newTodoItem);
+        setContents((_prevState) => '');
+    }, [contents]);
 
     return (
         <div className="TodoEditor">
@@ -58,4 +48,4 @@ function TodoEditor({ setTodoItems, idKey, setIdKey }: TodoEditorInputType) {
     )
 }
 
-export default TodoEditor;
+export default React.memo(TodoEditor);

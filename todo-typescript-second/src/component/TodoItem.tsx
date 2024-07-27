@@ -1,13 +1,13 @@
 import "./TodoItem.css"
 import { TodoItemType } from "../DataModel";
+import React, {useContext, useMemo} from "react";
+import {DispatchContext} from "../ContextUtils";
 
 type InternalTodoItemType = {
     id: number,
     title: string,
     date: number,
-    is_done: boolean,
-    onDeleteTodoItem: (t: number) => void,
-    onUpdateTodoItem: (t: number, s: boolean) => void
+    is_done: boolean
 }
 
 
@@ -15,17 +15,16 @@ function TodoItem({
                       id,
                       title,
                       date,
-                      is_done,
-                      onDeleteTodoItem,
-                      onUpdateTodoItem
+                      is_done
                   }: InternalTodoItemType) {
 
+    const {onDeleteTodoItem, onUpdateTodoItem} = useContext(DispatchContext);
     const onClickedDeleteButton = (_e: React.MouseEvent<HTMLButtonElement>) => {
-        onDeleteTodoItem(id);
+        onDeleteTodoItem({ id, title, date, is_done });
     }
 
     const onChangeCheckedButton = (e: React.ChangeEvent<HTMLInputElement>) => {
-        onUpdateTodoItem(id, e.target.checked);
+        onUpdateTodoItem({ id, title, date, is_done: !is_done });
     }
 
     return (
@@ -45,4 +44,4 @@ function TodoItem({
     )
 }
 
-export default TodoItem;
+export default React.memo(TodoItem);

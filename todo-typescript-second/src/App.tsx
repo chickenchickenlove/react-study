@@ -1,41 +1,71 @@
-import React, {useState} from 'react';
+import React, {useCallback, useContext, useMemo, useReducer, useRef, useState} from 'react';
 import './App.css';
 import Header from "./component/Header";
 import TodoEditor from "./component/TodoEditor";
-import TodoItem from "./component/TodoItem";
 import TodoList from "./component/TodoList";
 import {dummyTodoItems, TodoItemType} from "./DataModel";
-import todoItem from "./component/TodoItem";
+import {TodoItemContext, TodoItemAction, DispatchContext} from "./ContextUtils";
+
+
+function reducer(prevState: TodoItemType[], action: TodoItemAction): TodoItemType[] {
+    switch (action.type) {
+        case "CREATE": {
+            return [action.item, ...prevState];
+        }
+        case "DELETE": {
+            return prevState.filter((it: TodoItemType) => it.id !== action.item.id);
+        }
+        case "UPDATE": {
+            console.log("update")
+            return prevState.map((it: TodoItemType) => {
+                    return it.id === action.item.id
+                        ? action.item
+                        : it});
+        }
+        default: {
+            console.log('default');
+            return prevState;
+        }
+    }
+
+}
+
+function createAction(type: "CREATE" | "UPDATE" | "DELETE", item: TodoItemType): TodoItemAction {
+    return { type, item };
+}
+
 
 function App() {
 
-    const [todoItems, setTodoItems] = useState<TodoItemType[]>(dummyTodoItems);
-    const [idKey, setIdKey] = useState(1);
+    const idKey = useRef(1);
+    const [todoItems, dispatch] = useReducer(reducer, dummyTodoItems);
 
-    const onCreateTodoItem = (newTodoItem: TodoItemType) => {
-        setTodoItems([
-            newTodoItem,
-            ...todoItems]);
-    }
+    const onCreateTodoItem = useCallback((newTodoItem: TodoItemType): void => {
+        dispatch(createAction("CREATE", newTodoItem));
+    },[]);
 
-    const onDeleteTodoItem = (targetId: number): void => {
-        setTodoItems(todoItems.filter((it: TodoItemType) => it.id !== targetId));
-    };
+    const onDeleteTodoItem = useCallback((deletedItem: TodoItemType): void => {
+        console.log("on delete")
+        dispatch(createAction("DELETE", deletedItem));
+    }, []);
 
-    const onUpdateTodoItem = (targetId: number, newCheckedState: boolean): void => {
-        setTodoItems(
-            todoItems.map((it: TodoItemType) => {
-                return it.id === targetId
-                    ? {...it, is_done: newCheckedState}
-                    : it;
-            }));
-    };
+    const onUpdateTodoItem = useCallback((updatedItem: TodoItemType): void => {
+        dispatch(createAction("UPDATE", updatedItem));
+    }, []);
+
+    const memorizedDispatchers = useMemo(() => {
+        return { onCreateTodoItem, onDeleteTodoItem, onUpdateTodoItem}
+    }, []);
 
     return (
         <div className="App">
             <Header />
-            <TodoEditor setTodoItems={setTodoItems} idKey={idKey} setIdKey={setIdKey}/>
-            <TodoList todoItems={todoItems} onDeleteTodoItem={onDeleteTodoItem} onUpdateTodoItem={onUpdateTodoItem}/>
+            <TodoItemContext.Provider value={{ todoItems }}>
+                <DispatchContext.Provider value={memorizedDispatchers}>
+                    <TodoEditor idKey={idKey}/>
+                    <TodoList />
+                </DispatchContext.Provider>
+            </TodoItemContext.Provider>
         </div>
     );
 }
