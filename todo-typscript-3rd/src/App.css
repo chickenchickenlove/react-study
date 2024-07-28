@@ -1,1 +1,19 @@
+/*
+- margin : 외부와 관련된 여백임
+- padding : component 내부에서의 여백임.
+- Flex Container : display 속성을 flex로 설정한 놈들. 보통 다른 요소들을 감싸는 컨테이너로 사용됨.
+- Gap : 자식 요소 간의 여백을 조절함
+*/
 
+.App {
+    max-width: 500px;
+    width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+    padding: 20px;
+    /*border: 1px solid gray;*/
+
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
