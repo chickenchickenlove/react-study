@@ -1,5 +1,5 @@
 import "./Header.css"
-import {ReactElement, ReactNode} from "react";
+import React, {ReactElement, ReactNode} from "react";
 
 
 type HeaderType = {
@@ -9,6 +9,7 @@ type HeaderType = {
 }
 
 function Header({left_child, title, right_child}: HeaderType) {
+
     return (
         <div className={"Header"}>
             <div className={"header_left"}>{left_child}</div>

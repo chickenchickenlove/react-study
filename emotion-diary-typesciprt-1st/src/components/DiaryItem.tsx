@@ -10,6 +10,10 @@ export type DiaryItemType = {
 };
 
 function DiaryItem({id, date, emotionId, content}: DiaryItemType) {
+
+    const doButton = (e: React.MouseEvent) => {
+
+    };
     return (
         <div className={"DiaryItem"}>
             <div className={`img_section img_section_${emotionId}`}>
@@ -20,7 +24,9 @@ function DiaryItem({id, date, emotionId, content}: DiaryItemType) {
                 <div className={"content_wrapper"}>{content}</div>
             </div>
             <div className={"button_section"}>
-                <Button text={"수정하기"}/>
+                <Button
+                    onButtonClick={doButton}
+                    text={"수정하기"}/>
             </div>
         </div>
     )
