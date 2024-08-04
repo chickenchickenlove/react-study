@@ -1,120 +1,66 @@
 import "./Editor.css"
-import React, {useCallback, useContext, useRef, useState} from "react";
+import React, {useCallback, useContext, useState} from "react";
 import Button from "./Button";
-import EmotionItem from "./EmotionItem";
+import EmotionItem, {emotions} from "./EmotionItem";
 import {useNavigate} from "react-router-dom";
-import {DiaryStateContext, DispatchersContext, IdKeyContext} from "../App";
-import {Simulate} from "react-dom/test-utils";
+import {DispatchersContext} from "../App";
+import {DiaryItemType} from "../types";
+import {getFormattedValue} from "../DateUtil";
 
-
-const defaultEmotions = [
-    {
-        emotionId: 1,
-        emotionText: "완전 좋음",
-        selectedEmotionId: 6
-    },
-    {
-        emotionId: 2,
-        emotionText: "좋음",
-        selectedEmotionId: 6
-    },
-    {
-        emotionId: 3,
-        emotionText: "그럭저럭",
-        selectedEmotionId: 6
-    },
-    {
-        emotionId: 4,
-        emotionText: "나쁨",
-        selectedEmotionId: 6
-    },
-    {
-        emotionId: 5,
-        emotionText: "끔찍함",
-        selectedEmotionId: 6
-    }
-]
-
-
-function getFormattedValue(date: Date) {
-    const year = date.getFullYear();
-    const month = date.getMonth() < 10 ? '0' + String(date.getMonth()+1) : String(date.getMonth()+1);
-    const day = date.getDate() < 10 ? '0' + String(date.getDate()) : String(date.getDate());
-
-    return `${year}-${month}-${day}`;
+type EditorType = {
+    diaryItem? : DiaryItemType,
+    submitFunction : (d: DiaryItemType) => void,
 }
 
+const initData = {
+    id: 0,
+    date: new Date().getTime(),
+    emotionId: 3,
+    content: ''
+}
 
-function Editor() {
-
-
-
+function Editor({diaryItem = initData, submitFunction } : EditorType) {
 
     const navigate = useNavigate();
     const onClickCancel = (e: React.MouseEvent) => {
         navigate(-1);
     }
 
-    // const idKey = useRef(7);
+    const [state, setState] = useState<DiaryItemType>(diaryItem)
 
-    const [emotions, setEmotions] = useState(defaultEmotions);
-    const [chooseDate, setChooseDate] = useState(getFormattedValue(new Date()));
-    const [contents, setContents] = useState('');
     const whenChangeContents = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setContents((_prevContents) => e.target.value);
+        setState((prevDiaryItem) => {
+            return {...prevDiaryItem, content: e.target.value};
+        })
     }
 
-    const [selectedEmotion, setSelectedEmotion] = useState(6);
-
     const {createDiaryItem} = useContext(DispatchersContext);
-
-
     const onUpdateDate = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setChooseDate((_prevDate) => e.target.value);
+        setState((prevDiaryItem) => {
+            return {...prevDiaryItem, date: new Date(e.target.value).getTime()}
+        })
     };
 
     const onSelectedEmotion = useCallback((selectedEmotionId: number) => {
-        setSelectedEmotion((_prevState) => selectedEmotionId);
-        setEmotions((prevEmotions) => {
-            return prevEmotions.map((it) => {
-                return {...it, selectedEmotionId: selectedEmotionId}
-            })
-        })
-    }, []);
+        setState((prevDiaryItem) => {
+            return {...prevDiaryItem, emotionId: selectedEmotionId}
+        });
+    }, [state]);
 
 
-    const {idKey} = useContext(IdKeyContext);
-    if (!idKey) {
-        return <div>=Loading...</div>;
-    }
-
-
-    const doSubmitCreate = useCallback((e: React.MouseEvent) => {
-
-        console.log("idKey:", idKey.current);
-        console.log(selectedEmotion);
-        if (contents && selectedEmotion !== 6) {
-            createDiaryItem({
-                id: idKey.current,
-                date: new Date().getTime(),
-                emotionId: selectedEmotion,
-                content: contents
+    const doSubmit = useCallback((e: React.MouseEvent) => {
+        if (state.content) {
+            submitFunction({
+                id: state.id,
+                date: state.date,
+                emotionId: state.emotionId,
+                content: state.content
             });
-
-            idKey.current += 1;
-            console.log("idKey:", idKey.current);
-            setContents('');
-            setSelectedEmotion(6);
             navigate('/');
-        } else if (selectedEmotion === 6){
-            console.log('here')
-            alert('오늘의 감정은 어땟나요?')
-        } else if (!contents) {
+        } else if (!state.content) {
             alert('오늘 무슨 일이 있었는지 적어주세요!')
         }
-    }, [contents, selectedEmotion, idKey]);
-
-
+    }, [state]);
 
 
     return (
@@ -123,24 +69,28 @@ function Editor() {
             <h4>오늘의 날짜</h4>
             <input
                 type={"date"}
-                value={chooseDate}
+                value={getFormattedValue(new Date(state.date))}
                 onChange={onUpdateDate}
             />
             <h4>오늘의 감정</h4>
             <div className={"emotion_list_wrapper"}>
                 {
                     emotions
-                        .map((it) => <EmotionItem key={it.emotionId} onSelectedEmotion={onSelectedEmotion} {...it}/>)
+                        .map((it) => it.emotionId)
+                        .map((emotionId) => <EmotionItem key={emotionId}
+                                                         emotionId={emotionId}
+                                                         selectedEmotionId={state.emotionId}
+                                                         onSelectedEmotion={onSelectedEmotion}/>)
                 }
             </div>
             <h4>오늘의 일기</h4>
             <textarea
-                value={contents}
+                value={state.content}
                 onChange={whenChangeContents}
                 placeholder={"오늘은 어땟나요?"}></textarea>
             <div className={"bottom_section"}>
                 <Button onButtonClick={onClickCancel} text={"취소하기"} />
-                <Button onButtonClick={doSubmitCreate} type={"positive"} text={"작성 완료"} />
+                <Button onButtonClick={doSubmit} type={"positive"} text={"작성 완료"} />
             </div>
         </div>
     );

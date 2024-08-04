@@ -4,27 +4,34 @@ import Editor from "../components/Editor";
 import React, {useContext} from "react";
 import {useNavigate} from "react-router-dom";
 import {DispatchersContext} from "../App";
+import {useNavigatorFunction, useRefContext} from "../hooks/MyCustomHook";
+import {DiaryItemType} from "../types";
 
 function New() {
 
-    const navigate = useNavigate();
-    const onClickBack = (e: React.MouseEvent) => {
-        navigate(-1);
-    };
+    const idKey = useRefContext();
+    const {goToPreviousPage} = useNavigatorFunction(useNavigate());
 
+    const {createDiaryItem} = useContext(DispatchersContext);
+
+    const createFunction = (diaryItem: DiaryItemType) => {
+        const newItem = {...diaryItem, id: idKey.current};
+        idKey.current += 1;
+        createDiaryItem(newItem);
+    };
 
 
     return (
         <div className={"New"}>
             <Header
+                title={"새 일기 쓰기"}
                 left_child={
                     <Button
-                        onButtonClick={onClickBack}
                         text={"뒤로 가기"}
+                        onButtonClick={goToPreviousPage}
                     />}
-                title={"새 일기 쓰기"}
             />
-            <Editor/>
+            <Editor submitFunction={createFunction}/>
         </div>
     );
 }

@@ -14,8 +14,7 @@ function Button({
     return (
         <button
             onClick={onButtonClick}
-            className={`Button Button_${type}`}
-        >
+            className={`Button Button_${type}`}>
             {text}
         </button>
     )

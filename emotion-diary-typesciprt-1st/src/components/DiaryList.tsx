@@ -1,16 +1,22 @@
 import "./DiaryList.css"
 import Button from "./Button";
 import React, {useContext, useState} from "react";
-import DiaryItem, {DiaryItemType} from "./DiaryItem";
+import DiaryItem from "./DiaryItem";
 import {useNavigate} from "react-router-dom";
-import {DiaryStateContext} from "../App";
+import {DiaryItemType} from "../types";
+import {DiaryStateContext} from "../context";
+import {getEnd, getStart} from "../DateUtil";
+import {useNavigatorFunction} from "../hooks/MyCustomHook";
 
 
-function DiaryList() {
-    const navigate = useNavigate();
+type DiaryListType = {
+    date: Date
+}
 
+function DiaryList({ date }: DiaryListType) {
+    const {goToNewPage} = useNavigatorFunction(useNavigate());
     const goToNewPageWhenButtonClicked = (e: React.MouseEvent) => {
-        navigate('/new');
+        goToNewPage();
     };
 
     const [sortOrder, setSortOrder] = useState('latest');
@@ -18,9 +24,7 @@ function DiaryList() {
         setSortOrder((prevOrder) => e.target.value);
     }
 
-
-    const {diaryItems} = useContext(DiaryStateContext);
-
+    const diaryItems = useContext(DiaryStateContext);
     const drawDiaryItems = (diaryItems: DiaryItemType[]) => {
         const sortFunction = sortOrder === 'latest' ?
             (a: DiaryItemType, b: DiaryItemType) => a.date - b.date :
@@ -28,6 +32,9 @@ function DiaryList() {
 
         return diaryItems
             .sort(sortFunction)
+            .filter((it) => {
+                return getStart(date).getTime() <= it.date && it.date <= getEnd(date).getTime()
+            })
             .map((it) => <DiaryItem key={it.id} {...it} />)
     }
 
@@ -37,7 +44,6 @@ function DiaryList() {
                 <div className={"left_col"}>
                     <select
                         onChange={doFunction}
-
                     >
                         <option value={"latest"}>최신순</option>
                         <option value={"oldest"}>오래된 순</option>
@@ -45,9 +51,9 @@ function DiaryList() {
                 </div>
                 <div className={"right_col"}>
                     <Button
-                        onButtonClick={goToNewPageWhenButtonClicked}
+                        text={"새 일기 쓰기"}
                         type="positive"
-                        text={"새 일기 쓰기"}/>
+                        onButtonClick={goToNewPageWhenButtonClicked}/>
                 </div>
             </div>
             {

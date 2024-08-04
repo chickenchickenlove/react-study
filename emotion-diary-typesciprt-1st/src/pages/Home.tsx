@@ -1,27 +1,28 @@
-import React from "react";
+import React, {useState} from "react";
 import Header from "../components/Header";
 import Button from "../components/Button";
 import DiaryList from "../components/DiaryList";
+import {moveToOtherMonth} from "../DateUtil";
 
-type HomeType = {
-    idKey: React.MutableRefObject<number>
-}
+function Home() {
 
-function Home({ idKey } : HomeType) {
+    const [date, setDate] = useState(new Date());
 
-    const date = new Date();
+    const goToPreviousMonth = (_e: React.MouseEvent) => {
+        setDate(moveToOtherMonth(date, -1));
+    };
 
-    const doButton = (e: React.MouseEvent) => {
-
+    const goToNextMonth = (_e: React.MouseEvent) => {
+        setDate(moveToOtherMonth(date, 1));
     };
 
     return (
         <div>
             <Header
-                left_child={<Button onButtonClick={doButton} text={"<"}/>}
-                right_child={<Button onButtonClick={doButton} text={">"}/>}
-                title={`${date.getFullYear()}년 ${date.getMonth()}월`}/>
-            <DiaryList />
+                left_child={<Button onButtonClick={goToPreviousMonth} text={"<"}/>}
+                right_child={<Button onButtonClick={goToNextMonth} text={">"}/>}
+                title={`${date.getFullYear()}년 ${date.getMonth() + 1}월`}/>
+            <DiaryList date={date}/>
         </div>
     );
 }
