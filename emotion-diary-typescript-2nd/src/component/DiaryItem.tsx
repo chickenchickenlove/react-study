@@ -1,18 +1,20 @@
 import './DiaryItem.css';
 import Button from "./Button";
 import {getEmotionImageByEmotionId} from "../utils/imgUtils";
-
-type DiaryItemType = {
-    emotionId?: number
-    content?: string
-    date?: number
-}
+import {DiaryType} from "../DiaryTypes";
+import {useNavigate} from "react-router-dom";
 
 function DiaryItem({
-                       emotionId = 1,
-                       content = 'hello',
+                       id,
+                       emotionId,
+                       contents,
                        date = new Date().getTime()
-                   }: DiaryItemType) {
+                   }: DiaryType) {
+
+    const navigate = useNavigate();
+    const goToEditPage = (e: React.MouseEvent) => {
+        navigate(`/edit/${id}`)
+    }
 
     return (
         <div className={'DiaryItem'}>
@@ -27,11 +29,11 @@ function DiaryItem({
                     {new Date(date).toLocaleDateString()}
                 </div>
                 <div className={'content_wrapper'}>
-                    {content}
+                    {contents}
                 </div>
             </div>
             <div className={'button_section'}>
-                <Button text={'수정하기'} doAction={(_) => console.log(1)}/>
+                <Button text={'수정하기'} doAction={goToEditPage}/>
             </div>
         </div>
     );

@@ -2,13 +2,17 @@ import {useParams} from "react-router-dom";
 import Header from "../component/Header";
 import Button from "../component/Button";
 import Editor from "../component/Editor";
+import {useFindDiary} from "../hooks/MyCustomHook";
 
 
 function Edit() {
 
     const {id} = useParams();
+    const diary = useFindDiary(id);
 
-    console.log("Edit - id :", id);
+    if (!diary) {
+        return <div>Loading...</div>
+    }
 
     return (
         <div>
@@ -27,7 +31,7 @@ function Edit() {
                     />
                 }
             />
-            <Editor />
+            <Editor {...diary}/>
         </div>
     )
 }

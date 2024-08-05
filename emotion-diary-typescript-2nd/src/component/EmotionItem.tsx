@@ -1,21 +1,29 @@
 import './EmotionItem.css'
 import {getEmotionImageByEmotionId, getEmotionTextByEmotionId} from "../utils/imgUtils";
+import {EmotionId} from "../DiaryTypes";
 
 type EmotionItemType = {
-    selectedEmotionId?: number
-    emotionId: number
+    selectedEmotion: EmotionId;
+    emotionId: EmotionId;
+    onSelected: (e: EmotionId) => void
 }
 
-function EmotionItem({   selectedEmotionId = 3,
-                         emotionId} : EmotionItemType) {
+function EmotionItem({ selectedEmotion, emotionId, onSelected } : EmotionItemType) {
 
     const className =
-        selectedEmotionId === emotionId ?
+        selectedEmotion === emotionId ?
         `EmotionItem EmotionItem_on_${emotionId}` :
         `EmotionItem EmotionItem_off`;
 
+    const onClicked = (_: React.MouseEvent) => {
+        onSelected(emotionId);
+    };
+
     return (
-        <div className={className}>
+        <div
+            className={className}
+            onClick={onClicked}
+        >
             <img src={getEmotionImageByEmotionId(emotionId)} />
             <span>{getEmotionTextByEmotionId(emotionId)}</span>
         </div>
