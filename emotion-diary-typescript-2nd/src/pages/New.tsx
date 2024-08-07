@@ -3,6 +3,8 @@ import Button from "../component/Button";
 import Editor from "../component/Editor";
 import {DiaryType} from "../DiaryTypes";
 import {useNavigate} from "react-router-dom";
+import {useContext} from "react";
+import {DiaryDispatcherContext} from "../App";
 
 const initData: DiaryType = {
     id: 1,
@@ -18,6 +20,7 @@ function New() {
         navigate(-1);
     }
 
+    const {onCreate} = useContext(DiaryDispatcherContext)
 
     return (
         <div>
@@ -33,7 +36,7 @@ function New() {
                         doAction={(_) => console.log(1)} />
                 }
             />
-            <Editor {...initData} />
+            <Editor onClickedDelegate={onCreate} {...initData} />
         </div>
     )
 }

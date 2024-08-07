@@ -6,8 +6,8 @@ export enum EmotionId {
     VERY_BAD = 5
 }
 
-export type DiaryType = {
-    id: number;
+export interface DiaryType {
+    readonly id: number;
     emotionId: EmotionId;
     date: number;
     contents: string;

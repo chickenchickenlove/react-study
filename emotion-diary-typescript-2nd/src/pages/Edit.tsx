@@ -31,7 +31,7 @@ function Edit() {
                     />
                 }
             />
-            <Editor {...diary}/>
+            <Editor onClickedDelegate={() => {}} {...diary}/>
         </div>
     )
 }

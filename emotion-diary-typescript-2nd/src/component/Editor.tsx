@@ -2,7 +2,9 @@ import './Editor.css'
 import EmotionItem from "./EmotionItem";
 import Button from "./Button";
 import {DiaryType, EmotionId} from "../DiaryTypes";
-import {ChangeEvent, useState} from "react";
+import React, {ChangeEvent, useState} from "react";
+import exp from "node:constants";
+import Diary from "../pages/Diary";
 
 const emotionIds = [1, 2, 3, 4, 5];
 
@@ -14,7 +16,11 @@ const getFormattedDate = (date: number) => {
     return `${yy}-${MM}-${dd}`;
 }
 
-function Editor({ id, emotionId, date, contents }: DiaryType) {
+interface EditorPropsType extends DiaryType {
+    onClickedDelegate: (diary: DiaryType) => void;
+}
+
+function Editor({ id, emotionId, date, contents, onClickedDelegate }: EditorPropsType) {
     const [diary, setDiary] = useState<DiaryType>({id, emotionId, date, contents})
     const [selectedEmotion, setSelectedEmotion] = useState(EmotionId.NORMAL);
 
@@ -37,6 +43,10 @@ function Editor({ id, emotionId, date, contents }: DiaryType) {
 
     const onSelectEmotionId = (emotionId: EmotionId) => {
         setSelectedEmotion((_) => emotionId);
+    }
+
+    const doAction = (e: React.MouseEvent<HTMLButtonElement>) => {
+        onClickedDelegate(diary);
     }
 
 
@@ -70,7 +80,7 @@ function Editor({ id, emotionId, date, contents }: DiaryType) {
                     <Button
                         type={'positive'}
                         text={'작성완료'}
-                        doAction={(_) => console.log(1)}/>
+                        doAction={doAction}/>
                 </div>
             </div>
         </div>
