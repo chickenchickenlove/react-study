@@ -3,8 +3,7 @@ import Button from "../component/Button";
 import Editor from "../component/Editor";
 import {DiaryType} from "../DiaryTypes";
 import {useNavigate} from "react-router-dom";
-import {useContext} from "react";
-import {DiaryDispatcherContext} from "../App";
+import {goToPageHomeNavi, goToPreviousNavi, useReducerDispatcher} from "../hooks/MyCustomHook";
 
 const initData: DiaryType = {
     id: 1,
@@ -14,29 +13,30 @@ const initData: DiaryType = {
 }
 
 function New() {
+    const {onCreateNewDiary} = useReducerDispatcher()
 
     const navigate = useNavigate();
-    const goToPrevious = (e: React.MouseEvent) => {
-        navigate(-1);
-    }
+    const goToPrevious = goToPreviousNavi(navigate);
+    const goToPageHome = goToPageHomeNavi(navigate);
 
-    const {onCreate} = useContext(DiaryDispatcherContext)
+    const onClickCreate = (diary: DiaryType) => {
+        onCreateNewDiary(diary)
+        goToPageHome();
+    }
 
     return (
         <div>
             <Header
                 title={'새 일기 쓰기'}
                 left_child={
-                    <Button text={'뒤로 가기'} doAction={goToPrevious} />
-                }
-                right_child={
                     <Button
-                        type={'negative'}
-                        text={'삭제하기'}
-                        doAction={(_) => console.log(1)} />
+                        text={'뒤로 가기'}
+                        doAction={goToPrevious}/>
                 }
             />
-            <Editor onClickedDelegate={onCreate} {...initData} />
+            <Editor
+                onClickedDelegate={onClickCreate}
+                {...initData} />
         </div>
     )
 }

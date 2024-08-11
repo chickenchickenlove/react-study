@@ -1,11 +1,10 @@
 import "./Header.css";
-import Button from "./Button";
 import React from "react";
 
-type HeaderType = {
-    title: string
-    left_child?: React.ReactNode
-    right_child?: React.ReactNode
+interface Props {
+    title: string;
+    left_child?: React.ReactNode;
+    right_child?: React.ReactNode;
 }
 
 
@@ -14,7 +13,8 @@ type HeaderType = {
 function Header({
     title,
     left_child,
-    right_child}: HeaderType) {
+    right_child
+}: Props) {
     return (
         <div className={"Header"}>
             <div className={"header_left"}>{left_child}</div>

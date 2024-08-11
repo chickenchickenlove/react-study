@@ -3,18 +3,30 @@ import Button from "./Button";
 import {getEmotionImageByEmotionId} from "../utils/imgUtils";
 import {DiaryType} from "../DiaryTypes";
 import {useNavigate} from "react-router-dom";
+import {goToPageDiaryNavi, goToPageEditNavi} from "../hooks/MyCustomHook";
+
+interface Props extends DiaryType { }
 
 function DiaryItem({
                        id,
                        emotionId,
                        contents,
                        date = new Date().getTime()
-                   }: DiaryType) {
+                   }: Props) {
 
     const navigate = useNavigate();
-    const goToEditPage = (e: React.MouseEvent) => {
-        navigate(`/edit/${id}`)
+    const goToPageEdit = goToPageEditNavi(navigate);
+    const goToPageDiary = goToPageDiaryNavi(navigate);
+
+    const goToPageEditOnClick = (e: React.MouseEvent) => {
+        goToPageEdit(id);
     }
+
+    const goToPageDiaryOnClick = (e: React.MouseEvent) => {
+        goToPageDiary(id);
+    };
+
+
 
     return (
         <div className={'DiaryItem'}>
@@ -24,7 +36,9 @@ function DiaryItem({
                     src={getEmotionImageByEmotionId(emotionId)}
                 />
             </div>
-            <div className={'info_section'}>
+            <div
+                onClick={goToPageDiaryOnClick}
+                className={'info_section'}>
                 <div className={'date_wrapper'}>
                     {new Date(date).toLocaleDateString()}
                 </div>
@@ -33,7 +47,9 @@ function DiaryItem({
                 </div>
             </div>
             <div className={'button_section'}>
-                <Button text={'수정하기'} doAction={goToEditPage}/>
+                <Button
+                    text={'수정하기'}
+                    doAction={goToPageEditOnClick}/>
             </div>
         </div>
     );

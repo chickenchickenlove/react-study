@@ -1,5 +1,5 @@
 import "./Button.css";
-import {ChangeEvent} from "react";
+import React from "react";
 
 
 type ButtonType = {
@@ -11,8 +11,7 @@ type ButtonType = {
 function Button({
                     text,
                     type='default',
-                    doAction}: ButtonType
-) {
+                    doAction}: ButtonType) {
     return (
         <button
             onClick={doAction}

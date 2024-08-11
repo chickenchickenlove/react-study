@@ -2,32 +2,32 @@ import "./DiaryList.css"
 import Button from "./Button";
 import DiaryItem from "./DiaryItem";
 import React, {useCallback, useContext, useEffect, useState} from "react";
-import app, {DiaryContext} from "../App";
+import {DiaryContext} from "../App";
 import {DiaryType} from "../DiaryTypes";
 import {useNavigate} from "react-router-dom";
 
+type SortOrder =
+    | 'latest'
+    | 'oldest'
 
 const sortOrderList = [
     { value: 'latest', display: '최신순' },
     { value: 'oldest', display: '오래된 순'}
 ]
 
-
-const getSortFunction = (sortOrder: string) => {
-    if (sortOrder === 'latest') {
-        return (a: DiaryType, b: DiaryType) => a.date - b.date
-    } else{
-        return (a: DiaryType, b: DiaryType) => b.date - a.date
-    }
+const getSortFunction = (sortOrder: SortOrder) => {
+    return sortOrder === 'latest' ?
+        (a: DiaryType, b: DiaryType) => a.date - b.date :
+        (a: DiaryType, b: DiaryType) => b.date - a.date
 }
 
 
 export const applyBoundaryCondition = (year: number, month: number) => {
     if (month <= 0) {
-        return [year-1, 12]
+        return [year - 1, 12];
     }
     else if (month >= 13) {
-        return [year+1, 1]
+        return [year + 1, 1];
     }
     else {
         return [year, month]
@@ -68,27 +68,32 @@ const getRightBoundary = (date: number) => {
     return new Date(year, month, normalizedDay, 23, 59, 59).getTime();
 };
 
-type DiaryListType = {
+
+type Props = {
     date: number
 }
 
-function DiaryList({date}: DiaryListType) {
+function toSortOrder(value: string): SortOrder {
+    if (value === 'latest' || value === 'oldest') {
+        return value;
+    }
+    return 'latest';
+}
+
+function DiaryList({ date }: Props) {
 
     const navigate = useNavigate();
-    const [sortOrder, setSortOrder] = useState('latest');
+    const [sortOrder, setSortOrder] = useState<SortOrder>('latest');
     const diaryItems = useContext(DiaryContext);
 
     // CallBack
     const updateSortOrder = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-        setSortOrder((_) => e.target.value);
+        setSortOrder((_) => toSortOrder(e.target.value));
     }, []);
 
     const goToNewPage = (e: React.MouseEvent) => {
         navigate('/new');
     }
-
-
-
 
     return (
         <div className={'DiaryList'}>
@@ -101,8 +106,10 @@ function DiaryList({date}: DiaryListType) {
                         >
                         {
                             sortOrderList
-                                .map((it) => {return <option key={it.value}
-                                                             value={it.value}>{it.display}</option>})
+                                .map((it) => {
+                                    return <option
+                                        key={it.value}
+                                        value={it.value}>{it.display}</option>;})
                         }
                     </select>
                 </div>

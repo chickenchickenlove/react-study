@@ -1,9 +1,13 @@
 import './Viewer.css';
-import {getEmotionImageByEmotionId, getEmotionObjectByEmotionId, getEmotionTextByEmotionId} from "../utils/imgUtils";
+import {getEmotionObjectByEmotionId} from "../utils/imgUtils";
 import {DiaryType} from "../DiaryTypes";
 
 
-function Viewer({ id, emotionId, date, contents }: DiaryType) {
+interface Props extends DiaryType {
+
+}
+
+function Viewer({ id, emotionId, date, contents }: Props) {
     const {image, text} = getEmotionObjectByEmotionId(emotionId)
 
     return (

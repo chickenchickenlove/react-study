@@ -3,8 +3,8 @@ import EmotionItem from "./EmotionItem";
 import Button from "./Button";
 import {DiaryType, EmotionId} from "../DiaryTypes";
 import React, {ChangeEvent, useState} from "react";
-import exp from "node:constants";
-import Diary from "../pages/Diary";
+import {useNavigate} from "react-router-dom";
+import {goToPreviousNavi} from "../hooks/MyCustomHook";
 
 const emotionIds = [1, 2, 3, 4, 5];
 
@@ -22,7 +22,8 @@ interface EditorPropsType extends DiaryType {
 
 function Editor({ id, emotionId, date, contents, onClickedDelegate }: EditorPropsType) {
     const [diary, setDiary] = useState<DiaryType>({id, emotionId, date, contents})
-    const [selectedEmotion, setSelectedEmotion] = useState(EmotionId.NORMAL);
+    const navigate = useNavigate();
+
 
     // callback
     const onChangeDate = (e: ChangeEvent<HTMLInputElement>) => {
@@ -34,7 +35,6 @@ function Editor({ id, emotionId, date, contents, onClickedDelegate }: EditorProp
     }
 
     const onUpdateContents = (e: ChangeEvent<HTMLTextAreaElement>) => {
-        console.log("here", e.target.value);
         setDiary((prevDiaryState) => {
             return {
                 ...prevDiaryState,
@@ -42,12 +42,27 @@ function Editor({ id, emotionId, date, contents, onClickedDelegate }: EditorProp
     }
 
     const onSelectEmotionId = (emotionId: EmotionId) => {
-        setSelectedEmotion((_) => emotionId);
+        setDiary((prevDiary) => {
+            return {...prevDiary,
+                emotionId: emotionId
+            }})
+
+        // setSelectedEmotion((_) => emotionId);
     }
 
     const doAction = (e: React.MouseEvent<HTMLButtonElement>) => {
+        if (!diary.contents) {
+            alert("내용을 입력해주세요.")
+            return;
+        }
+
+
         onClickedDelegate(diary);
     }
+
+    const doCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
+        goToPreviousNavi(navigate)();
+    };
 
 
     return (
@@ -63,11 +78,13 @@ function Editor({ id, emotionId, date, contents, onClickedDelegate }: EditorProp
                 <div className={'emotion_list_wrapper'}>
                     {
                         emotionIds
-                            .map((emotionId) => <EmotionItem key={emotionId}
-                                                             emotionId={emotionId}
-                                                             selectedEmotion={selectedEmotion}
-                                                             onSelected={onSelectEmotionId}
-                            />)
+                            .map((emotionId) =>
+                                <EmotionItem
+                                    key={emotionId}
+                                    emotionId={emotionId}
+                                    selectedEmotion={diary.emotionId}
+                                    onSelected={onSelectEmotionId}
+                                />)
                     }
                 </div>
                 <h4>오늘의 일기</h4>
@@ -76,11 +93,15 @@ function Editor({ id, emotionId, date, contents, onClickedDelegate }: EditorProp
                     onChange={onUpdateContents}
                     placeholder={'오늘은 어땟나요?'}/>
                 <div className={'bottom_section'}>
-                    <Button text={'취소하기'} doAction={(_) => console.log(1)}/>
+                    <Button
+                        text={'취소하기'}
+                        doAction={doCancel}
+                    />
                     <Button
                         type={'positive'}
                         text={'작성완료'}
-                        doAction={doAction}/>
+                        doAction={doAction}
+                    />
                 </div>
             </div>
         </div>

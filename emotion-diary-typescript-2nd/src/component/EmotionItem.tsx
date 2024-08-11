@@ -2,13 +2,13 @@ import './EmotionItem.css'
 import {getEmotionImageByEmotionId, getEmotionTextByEmotionId} from "../utils/imgUtils";
 import {EmotionId} from "../DiaryTypes";
 
-type EmotionItemType = {
+interface Props {
     selectedEmotion: EmotionId;
     emotionId: EmotionId;
     onSelected: (e: EmotionId) => void
 }
 
-function EmotionItem({ selectedEmotion, emotionId, onSelected } : EmotionItemType) {
+function EmotionItem({ selectedEmotion, emotionId, onSelected } : Props) {
 
     const className =
         selectedEmotion === emotionId ?

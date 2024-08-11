@@ -2,27 +2,27 @@ import {useNavigate, useParams} from "react-router-dom";
 import Header from "../component/Header";
 import Viewer from "../component/Viewer";
 import Button from "../component/Button";
-import {useContext} from "react";
-import {DiaryContext} from "../App";
-import diaryItem from "../component/DiaryItem";
+import {goToPageEditNavi, goToPreviousNavi, useFindDiary} from "../hooks/MyCustomHook";
 
 function Diary() {
 
     const {id} = useParams();
-    const diary = useContext(DiaryContext)
-        .find((it) => String(it.id) === id);
+    const diary = useFindDiary(id);
 
-    const naviate = useNavigate();
+    const navigate = useNavigate();
+    const goToPrevious = goToPreviousNavi(navigate);
+    const goToPageEdit = goToPageEditNavi(navigate);
+
     if (!diary) {
         return <div>Loading...</div>
     }
 
     const goToBackPage = (_e: React.MouseEvent) => {
-        naviate(-1);
+        goToPrevious();
     }
 
     const goToEditPage = (_e: React.MouseEvent) => {
-        naviate(`/edit/${diary.id}`)
+        goToPageEdit(diary.id);
     };
 
     return (
@@ -43,7 +43,6 @@ function Diary() {
                 }
             />
             <Viewer {...diary}
-
             />
         </div>
     )
