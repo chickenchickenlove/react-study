@@ -2,7 +2,7 @@ import './Editor.css'
 import EmotionItem from "./EmotionItem";
 import Button from "./Button";
 import {DiaryType, EmotionId} from "../DiaryTypes";
-import React, {ChangeEvent, useState} from "react";
+import React, {ChangeEvent, useMemo, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {goToPreviousNavi} from "../hooks/MyCustomHook";
 
@@ -22,7 +22,9 @@ interface EditorPropsType extends DiaryType {
 
 function Editor({ id, emotionId, date, contents, onClickedDelegate }: EditorPropsType) {
     const [diary, setDiary] = useState<DiaryType>({id, emotionId, date, contents})
+
     const navigate = useNavigate();
+    const goToPrevious = goToPreviousNavi(navigate)
 
 
     // callback
@@ -34,34 +36,40 @@ function Editor({ id, emotionId, date, contents, onClickedDelegate }: EditorProp
             }});
     }
 
-    const onUpdateContents = (e: ChangeEvent<HTMLTextAreaElement>) => {
-        setDiary((prevDiaryState) => {
-            return {
-                ...prevDiaryState,
-                contents: e.target.value}})
-    }
-
-    const onSelectEmotionId = (emotionId: EmotionId) => {
-        setDiary((prevDiary) => {
-            return {...prevDiary,
-                emotionId: emotionId
-            }})
-
-        // setSelectedEmotion((_) => emotionId);
-    }
-
-    const doAction = (e: React.MouseEvent<HTMLButtonElement>) => {
-        if (!diary.contents) {
-            alert("내용을 입력해주세요.")
-            return;
+    const onUpdateContents = useMemo(() => {
+        return (e: ChangeEvent<HTMLTextAreaElement>) => {
+            setDiary((prevDiaryState) => {
+                return {
+                    ...prevDiaryState,
+                    contents: e.target.value
+                }
+            })
         }
+    }, []);
 
+    const onSelectEmotionId = useMemo(() => {
+        return (emotionId: EmotionId) => {
+            setDiary((prevDiary) => {
+                return {
+                    ...prevDiary,
+                    emotionId: emotionId
+                }
+            })
+        }
+    }, []);
 
-        onClickedDelegate(diary);
-    }
+    const doAction = useMemo(() => {
+        return (e: React.MouseEvent<HTMLButtonElement>) => {
+            if (!diary.contents) {
+                alert("내용을 입력해주세요.")
+                return;
+            }
+            onClickedDelegate(diary);
+        }
+    }, [diary.contents]);
 
     const doCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
-        goToPreviousNavi(navigate)();
+        goToPrevious();
     };
 
 

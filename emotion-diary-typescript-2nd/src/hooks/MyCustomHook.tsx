@@ -1,15 +1,22 @@
 import {DiaryContext, DiaryDispatcherContext} from "../App";
 import React, {useContext} from "react";
 import {NavigateFunction, useNavigate} from "react-router-dom";
+import {Runtime} from "node:inspector";
 
 export function useFindDiary(id: string | undefined) {
     const diaries = useContext(DiaryContext);
-
     if (!id) {
-        return undefined;
+        throw Error('id is undefined.')
     }
 
-    return diaries.find((it) => String(it.id) === id);
+    const foundDiary = diaries
+        .find((it) => String(it.id) === id)
+
+    if (!foundDiary) {
+        throw Error('No diary is found.')
+    }
+
+    return foundDiary;
 }
 
 

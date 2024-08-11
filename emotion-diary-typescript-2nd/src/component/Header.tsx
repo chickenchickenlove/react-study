@@ -8,8 +8,6 @@ interface Props {
 }
 
 
-// React Component 자체를 주입받아서 조립한다.
-// props가 아니라...
 function Header({
     title,
     left_child,
@@ -24,4 +22,4 @@ function Header({
     );
 }
 
-export default Header;
+export default React.memo(Header);

@@ -13,10 +13,6 @@ function Diary() {
     const goToPrevious = goToPreviousNavi(navigate);
     const goToPageEdit = goToPageEditNavi(navigate);
 
-    if (!diary) {
-        return <div>Loading...</div>
-    }
-
     const goToBackPage = (_e: React.MouseEvent) => {
         goToPrevious();
     }

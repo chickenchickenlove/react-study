@@ -4,6 +4,7 @@ import {getEmotionImageByEmotionId} from "../utils/imgUtils";
 import {DiaryType} from "../DiaryTypes";
 import {useNavigate} from "react-router-dom";
 import {goToPageDiaryNavi, goToPageEditNavi} from "../hooks/MyCustomHook";
+import React, {useMemo} from "react";
 
 interface Props extends DiaryType { }
 
@@ -18,15 +19,13 @@ function DiaryItem({
     const goToPageEdit = goToPageEditNavi(navigate);
     const goToPageDiary = goToPageDiaryNavi(navigate);
 
-    const goToPageEditOnClick = (e: React.MouseEvent) => {
-        goToPageEdit(id);
-    }
+    const goToPageEditOnClick = useMemo(() => {
+        return (e: React.MouseEvent) => goToPageEdit(id);
+    }, [id]);
 
-    const goToPageDiaryOnClick = (e: React.MouseEvent) => {
-        goToPageDiary(id);
-    };
-
-
+    const goToPageDiaryOnClick = useMemo(() => {
+        return (e: React.MouseEvent) => goToPageDiary(id);
+    }, [id]);
 
     return (
         <div className={'DiaryItem'}>
@@ -55,4 +54,4 @@ function DiaryItem({
     );
 }
 
-export default DiaryItem;
+export default React.memo(DiaryItem);

@@ -1,6 +1,7 @@
 import './EmotionItem.css'
 import {getEmotionImageByEmotionId, getEmotionTextByEmotionId} from "../utils/imgUtils";
 import {EmotionId} from "../DiaryTypes";
+import React from "react";
 
 interface Props {
     selectedEmotion: EmotionId;
@@ -30,4 +31,4 @@ function EmotionItem({ selectedEmotion, emotionId, onSelected } : Props) {
     )
 }
 
-export default EmotionItem;
+export default React.memo(EmotionItem);

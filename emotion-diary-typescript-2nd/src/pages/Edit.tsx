@@ -23,10 +23,6 @@ function Edit() {
     const goToPageHome = goToPageHomeNavi(navigate);
     const goToPrevious = goToPreviousNavi(navigate);
 
-    if (!diary) {
-        return <div>Loading...</div>
-    }
-
     const onUpdateDiaryWithAction = (diary: DiaryType) => {
         onUpdateDiary(diary);
         alert("성공적으로 수정되었습니다.")

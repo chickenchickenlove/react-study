@@ -1,7 +1,7 @@
 import "./DiaryList.css"
 import Button from "./Button";
 import DiaryItem from "./DiaryItem";
-import React, {useCallback, useContext, useEffect, useState} from "react";
+import React, {ReactNode, useCallback, useContext, useEffect, useState} from "react";
 import {DiaryContext} from "../App";
 import {DiaryType} from "../DiaryTypes";
 import {useNavigate} from "react-router-dom";
@@ -81,19 +81,29 @@ function toSortOrder(value: string): SortOrder {
 }
 
 function DiaryList({ date }: Props) {
-
-    const navigate = useNavigate();
-    const [sortOrder, setSortOrder] = useState<SortOrder>('latest');
     const diaryItems = useContext(DiaryContext);
+    const [sortOrder, setSortOrder] = useState<SortOrder>('latest');
+    const [filteredAndSortedDiaries, setFilteredAndSortedDiaries] = useState<ReactNode[]>();
 
     // CallBack
     const updateSortOrder = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
         setSortOrder((_) => toSortOrder(e.target.value));
     }, []);
 
-    const goToNewPage = (e: React.MouseEvent) => {
-        navigate('/new');
-    }
+    const navigate = useNavigate();
+    const goToNewPage = React.useMemo(() => {
+        return (e: React.MouseEvent) => navigate('/new');
+    }, []);
+
+
+    useEffect(() => {
+        setFilteredAndSortedDiaries((_) => diaryItems
+            .filter((it) => {
+                return getLeftBoundary(date) <= it.date && it.date <= getRightBoundary(date)}
+            )
+            .sort(getSortFunction(sortOrder))
+            .map((it) => <DiaryItem key={it.id} {...it} />))
+    }, [date, sortOrder, diaryItems]);
 
     return (
         <div className={'DiaryList'}>
@@ -120,14 +130,7 @@ function DiaryList({ date }: Props) {
                         doAction={goToNewPage}/>
                 </div>
             </div>
-            {
-                diaryItems
-                    .filter((it) => {
-                        return getLeftBoundary(date) <= it.date && it.date <= getRightBoundary(date)}
-                    )
-                    .sort(getSortFunction(sortOrder))
-                    .map((it) => <DiaryItem key={it.id} {...it} />)
-            }
+            {filteredAndSortedDiaries}
         </div>
     );
 }
