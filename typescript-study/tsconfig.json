@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "ESNext", // 변환되는 자바 스크립트 코드가 사용할 자바 스크립트의 버전을 명시
+    "module": "ESNext", // 변환되는 자바 스크립트 코드가 사용할 모듈 시스템
+    "outDir": "dist", // 컴파일 결과로 생성된 JS 코드가 저장될 위치.
+    "strict": true,
+    "moduleDetection": "force" // force로 설정하면, 자동으로 모든 타입스크립트 파일들을 개별 모듈로 취금함.
+  },
+  "ts-node": {
+    "esm": true  // tsnode로도 esmodule 시스템을 실행하기 위해서는 tsnod.esm을 true로 해야함.
+  },
+  "include": ["src"], // 타입 스크립트 컴파일러가 어떤 폴더에 있는 것을 컴파일 할지 결정.
+}
