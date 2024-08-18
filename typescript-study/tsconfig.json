@@ -9,5 +9,8 @@
   "ts-node": {
     "esm": true  // tsnode로도 esmodule 시스템을 실행하기 위해서는 tsnod.esm을 true로 해야함.
   },
+  "tsx": {
+    "esm": true  // tsnode로도 esmodule 시스템을 실행하기 위해서는 tsnod.esm을 true로 해야함.
+  },
   "include": ["src"], // 타입 스크립트 컴파일러가 어떤 폴더에 있는 것을 컴파일 할지 결정.
 }
