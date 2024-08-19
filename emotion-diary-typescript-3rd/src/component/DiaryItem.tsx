@@ -1,22 +1,36 @@
 import "./DiaryItem.css"
 import {getImageAndTags} from "../utils";
 import Button from "./Button";
+import {DiaryType} from "../types";
+import {useNavigate} from "react-router-dom";
 
-function DiaryItem() {
+interface Props {
+    diary: DiaryType;
+}
 
-    const { image} = getImageAndTags("VERY_GOOD")
+
+function DiaryItem({diary}: Props) {
+
+    const { image, order} = getImageAndTags(diary.emotion);
+    const navigate = useNavigate();
+    const goToEditPage = (e: any) => {
+        navigate(`/edit/${diary.id}`)
+    }
+
+
     return (
         <div className={"DiaryItem"}>
-            <div className={"img_section img_section_1"}>
+            <div className={`img_section img_section_${order}`}>
                 <img src={image} />
             </div>
             <div className={"info_section"}>
-                <div className={"date_wrapper"}>2024. 8. 18.</div>
-                <div className={"content_wrapper"}> 오늘은 행복했어</div>
+                <div className={"date_wrapper"}>{new Date(diary.created_date).toLocaleDateString()}</div>
+                <div className={"content_wrapper"}>{diary.content}</div>
             </div>
             <div className={"button_section"}>
                 <Button
                     text={"수정하기"}
+                    doCallback={goToEditPage}
                 />
             </div>
         </div>

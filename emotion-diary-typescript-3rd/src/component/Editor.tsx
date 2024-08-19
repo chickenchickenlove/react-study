@@ -1,8 +1,11 @@
 import "./Editor.css"
 import Button from "./Button";
 import EmotionItem from "./EmotionItem";
+import {EmotionTag, EmotionTagType} from "../utils";
 
 function Editor() {
+
+    // TODO : EmotionItem => useEffect()로 전환 필요.
     return (
         <div className={"Editor"}>
             <div className={"editor_section"}>
@@ -10,11 +13,13 @@ function Editor() {
                 <input type={"date"}/>
                 <h4>오늘의 감정</h4>
                 <div className={"emotion_list_wrapper"}>
-                    <EmotionItem />
-                    <EmotionItem />
-                    <EmotionItem />
-                    <EmotionItem />
-                    <EmotionItem />
+                    {
+                        EmotionTag.map((it) => {
+                            return <EmotionItem
+                                tag={it}
+                                isSelected={false} />
+                        })
+                    }
                 </div>
 
             </div>

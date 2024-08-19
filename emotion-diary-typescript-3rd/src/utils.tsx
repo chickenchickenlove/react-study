@@ -4,21 +4,25 @@ import img3 from "./img/emotion3.png"
 import img4 from "./img/emotion4.png"
 import img5 from "./img/emotion5.png"
 
-export type EmotionTag =
+export type EmotionTagType =
     "VERY_GOOD" | "GOOD" | "NORMAL" | "BAD" | "VERY_BAD";
+
+export const EmotionTag: EmotionTagType[] = ["VERY_GOOD", "GOOD", "NORMAL", "BAD", "VERY_BAD"]
+
 type ImageType =
     typeof img1 | typeof img2 | typeof img3 | typeof img4 | typeof img5
 export type ImageOrderType = 1 | 2 | 3 | 4 | 5;
 
 type ImageAndTags = {
-    tag: EmotionTag;
+    tag: EmotionTagType;
     image: ImageType
     description: string;
     order: ImageOrderType;
 }
 
 
-export function getImageAndTags(emotionType: EmotionTag): ImageAndTags {
+
+export function getImageAndTags(emotionType: EmotionTagType): ImageAndTags {
     switch (emotionType) {
         case "VERY_GOOD":
             return {tag: "VERY_GOOD", image: img1, description: "아주 좋음", order: 1}

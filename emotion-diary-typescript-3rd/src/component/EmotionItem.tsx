@@ -1,15 +1,15 @@
 import "./EmotionItem.css"
-import {EmotionTag, getImageAndTags, ImageOrderType} from "../utils";
+import {EmotionTagType, getImageAndTags, ImageOrderType} from "../utils";
 
 interface Props {
-    tag?: EmotionTag;
+    tag: EmotionTagType;
     isSelected?: boolean;
 }
 
 
 function EmotionItem({tag, isSelected }: Props) {
 
-    const {image, description, order} = getImageAndTags("VERY_GOOD");
+    const {image, description, order} = getImageAndTags(tag);
     const dynamicClass = isSelected ? `EmotionItem_on_${order}` : `EmotionItem_off`;
 
     return (

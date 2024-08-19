@@ -3,7 +3,7 @@ import "./Button.css"
 interface Props {
     type?: "negative" | "positive" | "default";
     text?: string;
-    doCallback?: () => void;
+    doCallback?: (e: any) => void;
 }
 
 function Button(
@@ -19,7 +19,7 @@ function Button(
     return (
         <button
             className={buttonClass}
-            onClick={() => doCallback()}>
+            onClick={doCallback}>
             {text}
         </button>
     )
