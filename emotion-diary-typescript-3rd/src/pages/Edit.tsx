@@ -13,7 +13,7 @@ function Edit() {
                 />}
                 title={"수정하기"}
             />
-            <Editor />
+            {/*<Editor />*/}
         </div>
 
     );

@@ -17,13 +17,18 @@ function DiaryItem({diary}: Props) {
         navigate(`/edit/${diary.id}`)
     }
 
+    const goToDetailPage = (e: any) => {
+        navigate(`/diary/${diary.id}`);
+    };
 
     return (
         <div className={"DiaryItem"}>
             <div className={`img_section img_section_${order}`}>
                 <img src={image} />
             </div>
-            <div className={"info_section"}>
+            <div
+                onClick={goToDetailPage}
+                className={"info_section"}>
                 <div className={"date_wrapper"}>{new Date(diary.created_date).toLocaleDateString()}</div>
                 <div className={"content_wrapper"}>{diary.content}</div>
             </div>

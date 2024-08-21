@@ -2,9 +2,11 @@ import "./DiaryList.css"
 import Button from "./Button";
 import DiaryItem from "./DiaryItem";
 import {useContext, useEffect, useState} from "react";
-import {DiaryStateContext} from "../pages/Home";
+import {calculateDate} from "../pages/Home";
+
 import {useNavigate} from "react-router-dom";
 import {DiaryType} from "../types";
+import {DiaryStateContext} from "../App";
 
 const sortOptions = [
     {
@@ -27,8 +29,27 @@ function getSortedFunction(sortedKey: string) {
 }
 
 
+interface Props {
+    homeDate: Date;
+}
 
-function DiaryList() {
+
+function isInDateRange(date: Date, it: DiaryType) {
+    const first = findDate(date, 0);
+    const last = findDate(date, 1);
+    return (first.getTime() <= it.created_date) && (it.created_date < last.getTime());
+}
+
+function findDate(date: Date, next: 0 | 1) {
+    const nowyy = date.getFullYear();
+    const nowMM = date.getMonth();
+    const nowdd = date.getDate();
+
+    const [yy, MM, dd] = calculateDate(nowyy, nowMM + next, nowdd);
+    return new Date(yy, MM, dd, 0, 0, 0, 0);
+}
+
+function DiaryList({homeDate}: Props) {
 
     const diaryList = useContext(DiaryStateContext);
     const navigate = useNavigate();
@@ -37,12 +58,12 @@ function DiaryList() {
     const [sortedDiaries, setSortedDiaries] = useState(diaryList);
 
     useEffect(() => {
-
         console.log("useEffect Called.")
-        setSortedDiaries((_) => diaryList.sort(getSortedFunction(sortedKey)));
-    }, [sortedKey]);
-
-
+        setSortedDiaries((_) =>
+            diaryList
+                .filter((it) => isInDateRange(homeDate, it))
+                .sort(getSortedFunction(sortedKey)));
+    }, [sortedKey, homeDate]);
 
     const goToNewPage = (_: any) => {
         navigate("/new");
@@ -78,7 +99,8 @@ function DiaryList() {
                 </div>
             </div>
             {
-                sortedDiaries.map((it) => <DiaryItem key={it.id} diary={it}/>)
+                sortedDiaries
+                    .map((it) => <DiaryItem key={it.id} diary={it}/>)
             }
         </div>
     );

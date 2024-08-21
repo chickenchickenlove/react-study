@@ -3,17 +3,25 @@ import {EmotionTagType, getImageAndTags, ImageOrderType} from "../utils";
 
 interface Props {
     tag: EmotionTagType;
-    isSelected?: boolean;
+    isSelected: boolean;
+    onClickedEmotion: (emotion: EmotionTagType) => void
 }
 
 
-function EmotionItem({tag, isSelected }: Props) {
+
+function EmotionItem({tag, isSelected, onClickedEmotion }: Props) {
 
     const {image, description, order} = getImageAndTags(tag);
     const dynamicClass = isSelected ? `EmotionItem_on_${order}` : `EmotionItem_off`;
 
+    const onClickedEmotionWrapper = (e: React.MouseEvent<HTMLDivElement>) => {
+        onClickedEmotion(tag);
+    }
+
     return (
-        <div className={`EmotionItem ${dynamicClass}`}>
+        <div
+            onClick={onClickedEmotionWrapper}
+            className={`EmotionItem ${dynamicClass}`}>
             <img src={image}/>
             <span>{description}</span>
         </div>
