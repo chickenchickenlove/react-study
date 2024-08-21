@@ -24,7 +24,6 @@
 type StringNumberSwitch<T> = T extends number ? string : number;
 let a: StringNumberSwitch<number>; // => string
 let b: StringNumberSwitch<string>; // => nubmer
-
 let c: StringNumberSwitch<number | string | boolean>; // => string | number
 
 
