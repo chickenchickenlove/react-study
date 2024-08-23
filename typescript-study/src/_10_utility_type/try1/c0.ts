@@ -1,9 +1,9 @@
 /**
  * Mapped Type 기반의 유틸리티 타입.
  * - Mapped Type은 기존 객체 타입을 기반으로 새로운 타입을 만드는 것임.
- * - Partial <T>
- * - Required <T>
- * - Readonly <T>
+ * - Partial <T> : 모든 필드가 Optional인 타입
+ * - Required <T> : 모든 필드가 필수인 타입
+ * - Readonly <T> : 모든 필드가 읽기 전용인 타입
  */
 
 

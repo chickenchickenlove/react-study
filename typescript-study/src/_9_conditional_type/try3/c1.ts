@@ -28,21 +28,20 @@
  */
 
 
-// 과제0. 분산 합집합 기본
-type StringNumberSwitch<T> = T extends number ? number : string;
+// 과제0. 분산 합집합 기본 (number 타입이면 number, 그 외는 string만 나오는 타입 설정)
+type StringNumber1<T> = T extends number ? number : string;
 
-let a1: StringNumberSwitch<string>; // => number
-let a2: StringNumberSwitch<number>; // => string
-let a3: StringNumberSwitch<boolean | number | string>; // => number | string
-
-// 과제1. Exclude 구현 (어떤 타입에서 특정 타입만 제거)
+// 과제1. Exclude 구현 (어떤 타입에서 특정 타입만 제거) <T, U>
 type Exclude<T, U> = T extends U ? never : T;
+type A = Exclude<string | boolean | number, number>; // string | boolean
 
 // 과제2. Extract 구현 (어떤 타입에서 특정 타입만 추출)
 type Extract<T, U> = T extends U ? T : never;
+type B = Extract<string, string | boolean | number> // => string
 
 // 과제3. 분산 합집합을 막는 방법
-let aaa: Extract<[string | number | boolean], string>; // never
+type StringNumber1NotUnion<T> = [T] extends number ? T : never;
+type C = StringNumber1NotUnion<string | boolean | number> // => never
 
 
 
