@@ -1,0 +1,14 @@
+.LoginForm {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /*height: 100vh;*/
+}
+
+.LoginForm .wrapper {
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+    gap: 10px;
+    border: red solid 1px;
+}

@@ -1,0 +1,41 @@
+
+.UserMessage {
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    gap: 10px;
+}
+
+.UserName {
+    font-weight: bold;
+}
+
+.UserMessage .me {
+    text-align: right;
+}
+
+.UserMessage .me_msg {
+    background-color: white;
+    margin-left: auto;
+    padding: 10px;
+    text-align: right;
+    /*border: red 1px solid;*/
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.UserMessage .other {
+    text-align: left;
+}
+
+.UserMessage .other_msg {
+    background-color: white;
+    margin-right: auto;
+    padding: 10px;
+    text-align: left;
+    /*border: red 1px solid;*/
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}

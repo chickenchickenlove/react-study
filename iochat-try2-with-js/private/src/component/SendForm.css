@@ -1,0 +1,22 @@
+
+.SendForm {
+    border: blue solid 1px;
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.wrapper {
+    border: blue solid 1px;
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+    gap: 10px;
+    flex-grow: 1;
+}
+
+/* 이렇게 하면 늘어남. flex-grow*/
+.wrapper input, button {
+    flex-grow: 1;
+}
