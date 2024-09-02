@@ -2,7 +2,7 @@ import "./SendForm.css";
 import {useState} from "react";
 
 
-function SendForm({sendChatMessage}) {
+function SendForm({sendChatMessage, sendLogoutRequestToServer}) {
 
     const [message, setMessage] = useState('')
 
@@ -24,6 +24,10 @@ function SendForm({sendChatMessage}) {
         setMessage('');
     }
 
+    const onClickLogOut = (e) => {
+        sendLogoutRequestToServer()
+    }
+
     return (
         <div className="SendForm">
             <div className="wrapper">
@@ -36,6 +40,11 @@ function SendForm({sendChatMessage}) {
                     onClick={onSendMessage}
                     type={"submit"}>
                     Send
+                </button>
+                <button
+                    onClick={onClickLogOut}
+                    type={"submit"}>
+                    LOGOUT
                 </button>
             </div>
         </div>

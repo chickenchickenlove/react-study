@@ -1,44 +1,22 @@
 import "./MessageViewer.css"
 import UserMessage from "./UserMessage";
 import WelcomeMessage from "./WelcomeMessage";
+import {useRef} from "react";
 
-const dummyMsgs = [
-    {
-        type: "welcome",
-        clazz: "me",
-        userName: "user1",
-        data: "user1",
-    },
-    {
-        type: "welcome",
-        clazz: "other",
-        userName: "user2",
-        data: "user2",
-    },
-    {
-        type: "message",
-        clazz: "me",
-        userName: "user1",
-        data: "How are you?",
-    },
-    {
-        type: "message",
-        clazz: "other",
-        userName: "user2",
-        data: "Hi, Nice to meet you.",
-    }
-];
+function MessageViewer({messages}) {
 
+    const msgKey = useRef(1);
+    console.log(messages);
 
-function MessageViewer() {
     return (
         <div className={"MessageViewer"}>
             <div className={"wrapper"}>
                 {
-                    dummyMsgs.map((it) => {
+                    messages.map((it) => {
+                        msgKey.current += 1;
                         return it.type === 'welcome' ?
-                            <WelcomeMessage {...it} /> :
-                            <UserMessage {...it} />;
+                            <WelcomeMessage key={msgKey.current} {...it} /> :
+                            <UserMessage key={msgKey.current} {...it} />;
                     })
                 }
             </div>
