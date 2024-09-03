@@ -11,24 +11,28 @@ const dummyMsgs = [
     clazz: "me",
     userName: "user1",
     data: "user1",
+    target: "",
   },
   {
     type: "welcome",
     clazz: "other",
     userName: "user2",
     data: "user2",
+    target: "",
   },
   {
     type: "message",
     clazz: "me",
     userName: "user1",
     data: "How are you?",
+    target: "",
   },
   {
     type: "message",
     clazz: "other",
     userName: "user2",
     data: "Hi, Nice to meet you.",
+    target: "",
   }
 ];
 
@@ -43,30 +47,36 @@ function App() {
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    console.log('useEffect')
+    console.log('useEffect: ', userName)
     if (!userName) {
       // userName이 생기고, 리랜더링 될 때 소켓이 생성됨.
       // 만약 이전 소켓이 존재한다면, 이전 소켓을 닫아줘야함.
       if (webSocketRef.current) {
-        webSocketRef.current.disconnect()
+        console.log("here logout")
+        webSocketRef.current.emit('LOGOUT', userName);
+        // webSocketRef.current.disconnect()
       }
 
       webSocketRef.current = io("http://localhost:5200");
       console.log("Connected to localhost:5200", userName);
+    } else {
+      const webSocket = webSocketRef.current;
 
       // 핸들러 등록. 현재 webSocket에 핸들러가 등록되는 것임.
       // 만약 동일한 핸들러가 동일한 소켓에 등록되면, 핸들러는 두번 호출됨.
       webSocketRef.current.on('LOGIN', (msg) => {
         setMessages((prev) => [...prev, msg]);
+        console.log('GOT LOGIN MSG')
       });
-    } else {
-      const webSocket = webSocketRef.current;
+
       webSocket.on('MESSAGE', (msg) => {
-        msg.clazz = msg.userName === userName ? "me" : "other";
+        console.log('GOT MESSAGE MSG')
+        msg.clazz = "other";
         setMessages((prev) => [...prev, msg]);
       });
 
       webSocket.on('LOGOUT', (msg) => {
+        console.log('GOT LOGOUT MSG', msg)
         setMessages((prev) => [...prev, msg]);
       });
     }
@@ -75,22 +85,19 @@ function App() {
   const sendChatMessage = (partialMsg) => {
     const msg = {...partialMsg, userName: userName};
     webSocketRef.current.emit('MESSAGE', msg);
+    setMessages((prev) => [...prev, {...msg, clazz: "me"}])
   }
 
   const sendLoginRequestToServer = (userName) => {
     if (!webSocketRef.current) {
       return (<div>Loading...</div>);
     }
+    console.log("LOGIN")
     webSocketRef.current.emit('LOGIN', userName);
     setUserName(userName);
     setIsLogin(() => true);
   }
 
-  const sendLogoutRequestToServer = useCallback(() => {
-    webSocketRef.current.emit('LOGOUT', userName);
-    setUserName(null);
-    setIsLogin(() => false);
-  }, [userName]);
 
   if (!isLogin) {
     return (
@@ -106,7 +113,6 @@ function App() {
       <Chat
           messages={messages}
           sendChatMessage={sendChatMessage}
-          sendLogoutRequestToServer={sendLogoutRequestToServer}
       />
     </div>
   );

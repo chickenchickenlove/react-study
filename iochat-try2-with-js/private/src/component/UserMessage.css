@@ -4,14 +4,19 @@
     flex-direction: column;
     padding: 5px;
     gap: 10px;
+
 }
 
 .UserName {
     font-weight: bold;
+    cursor: pointer;
+    border: red solid 1px;
+    margin-left: auto;
 }
 
 .UserMessage .me {
     text-align: right;
+    display: inline-block;
 }
 
 .UserMessage .me_msg {

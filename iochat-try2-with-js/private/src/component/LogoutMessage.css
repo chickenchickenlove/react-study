@@ -1,0 +1,16 @@
+
+.LogoutMessage {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 12px;
+    font-weight: bold;
+    gap: 10px;
+}
+
+.line {
+    height: 0.5px;
+    flex: 1 1 auto;
+    padding: 0 10px;
+    background-color: #cecece;
+}

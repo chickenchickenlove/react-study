@@ -2,7 +2,7 @@ import "./SendForm.css";
 import {useState} from "react";
 
 
-function SendForm({sendChatMessage, sendLogoutRequestToServer}) {
+function SendForm({sendChatMessage}) {
 
     const [message, setMessage] = useState('')
 
@@ -25,7 +25,7 @@ function SendForm({sendChatMessage, sendLogoutRequestToServer}) {
     }
 
     const onClickLogOut = (e) => {
-        sendLogoutRequestToServer()
+        // sendLogoutRequestToServer()
     }
 
     return (

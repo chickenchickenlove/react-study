@@ -2,7 +2,7 @@ import "./Chat.css";
 import MessageViewer from "./MessageViewer";
 import SendForm from "./SendForm";
 
-function Chat({sendChatMessage, messages, sendLogoutRequestToServer}) {
+function Chat({sendChatMessage, messages}) {
     return (
         <div className="Chat">
             <MessageViewer
@@ -10,7 +10,6 @@ function Chat({sendChatMessage, messages, sendLogoutRequestToServer}) {
             />
             <SendForm
                 sendChatMessage={sendChatMessage}
-                sendLogoutRequestToServer={sendLogoutRequestToServer}
             />
         </div>
     )

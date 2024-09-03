@@ -2,6 +2,7 @@ import "./MessageViewer.css"
 import UserMessage from "./UserMessage";
 import WelcomeMessage from "./WelcomeMessage";
 import {useRef} from "react";
+import LogoutMessage from "./LogoutMessage";
 
 function MessageViewer({messages}) {
 
@@ -14,9 +15,19 @@ function MessageViewer({messages}) {
                 {
                     messages.map((it) => {
                         msgKey.current += 1;
-                        return it.type === 'welcome' ?
-                            <WelcomeMessage key={msgKey.current} {...it} /> :
-                            <UserMessage key={msgKey.current} {...it} />;
+
+                        if (it.type === 'welcome') {
+                            console.log("welcome msg type")
+                            return <WelcomeMessage key={msgKey.current} {...it} />
+                        }
+                        else if (it.type === 'logout') {
+                            console.log("logout msg type")
+                            return <LogoutMessage key={msgKey.current} {...it} />
+                        }
+                        else {
+                            console.log("user msg type")
+                            return <UserMessage key={msgKey.current} {...it} />;
+                        }
                     })
                 }
             </div>
